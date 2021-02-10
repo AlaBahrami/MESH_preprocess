@@ -1,1 +1,1 @@
-# The purpose of this is to read streaflow records and filter them based on missing data and other requirements
+# The purpose of this repositiry is to create a preprocessing of MESH hydrology land surface model
