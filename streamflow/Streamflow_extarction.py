@@ -23,7 +23,7 @@ filout     = "Streamflow_FRB_fill.xlsx"
 filout2    = "Streamflow_FRB_85%.xlsx"
 filindex   = "stflo_index85.xlsx"
 filmissing = "stflo_index_missing.xlsx"
-filcalib   = "stflo_calibration.xlsx"
+filcalib   = "Streamflow_FRB_calibration.xlsx"
 
 # %% start and end time of GEM_CaPA
 ts = datetime.datetime(2004, 9 , 1)
