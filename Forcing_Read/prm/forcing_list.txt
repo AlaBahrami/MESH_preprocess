@@ -1,0 +1,14 @@
+humidity_gem                D:/Fraser/MESH/Forcing/3D/basin_humidity_3D.nc
+longwave_gem                D:/Fraser/MESH/Forcing/3D/basin_longwave_3D.nc
+presure_gem                 D:/Fraser/MESH/Forcing/3D/basin_pres_3D.nc
+rain_gem                    D:/Fraser/MESH/Forcing/3D/basin_rain_3D.nc
+shortwave_gem               D:/Fraser/MESH/Forcing/3D/basin_shortwave_3D.nc
+temperature_gem             D:/Fraser/MESH/Forcing/3D/basin_temperature_3D.nc
+wind_gem                    D:/Fraser/MESH/Forcing/3D/basin_wind_3D.nc
+humidity_rdrs               D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_P_HU_09944_2000-2017_MESH.nc
+longwave_rdrs               D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_P_FI_SFC_2000-2017_MESH.nc
+presure_rdrs                D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_P_P0_SFC_2000-2017_MESH.nc
+rain_rdrs                   D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_A_PR0_SFC_2000-2017_MESH.nc
+shortwave_rdrs              D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_P_FB_SFC_2000-2017_MESH.nc
+temperature_rdrs            D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_P_TT_09944_2000-2017_MESH.nc
+wind_rdrs                   D:/Fraser/MESH/Forcing/RDRS/Fraser_RDRS_v2_P_UVC_09944_2000-2017_MESH.nc
