@@ -55,15 +55,15 @@ function BAforcing = Forcing_NetCDF_Read(prmname)
     timegem_dl = t1_s : days(1) : t1_f;
      
     % RDRS
-    t2_s = datetime(2000, 01 , 1 , 13 , 0 , 0);
-    t2_f = datetime(2018 ,01 , 1 , 12 , 0 , 0);
+    t2_s = datetime(2000, 01 , 1 , 12 , 0 , 0);
+    t2_f = datetime(2018 ,01 , 1 , 11 , 0 , 0);
     timerdrs    = t2_s : hours(1) : t2_f;
     timerdrs_dl = t2_s : days(1) : t2_f;
     timerdrs_mo = t2_s : calmonths(3) : t2_f;
     timerdrs_y  = t2_s : calyears(3) : t2_f;
 
     % time gaps 
-    t3_s        = datetime(2000, 01 , 01 , 13 , 0 , 0);
+    t3_s        = datetime(2000, 01 , 01 , 12 , 0 , 0);
     t3_f        = datetime(2004, 09 , 1 , 5 , 0 , 0);
     timegap     = t3_s : hours(1) : t3_f;
     p           = length(timegap);
@@ -194,10 +194,10 @@ function BAforcing = Forcing_NetCDF_Read(prmname)
     end 
     
     fs1 = strcat(outdir,'forcingdiff.fig');
-    %fs2 = strcat(outdir,'imbalance.tif');
     fs2 = strcat(outdir,'forcingdiff.png');
     saveas(fig, fs1);
     saveas(fig, fs2);
+    save('Output/BAforcing.mat', 'BAforcing')
     close(fig);
     close(wt)
 end
