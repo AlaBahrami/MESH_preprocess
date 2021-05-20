@@ -1,0 +1,9 @@
+08JC002				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08JC002_Daily_Flow_ts.csv 
+08KB001				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08KB001_Daily_Flow_ts.csv
+08KH006				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08KH006_Daily_Flow_ts.csv
+08KG001				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08KG001_Daily_Flow_ts.csv
+08LF051				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08LF051_Daily_Flow_ts.csv
+08MB005				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08MB005_Daily_Flow_ts.csv
+08MC018				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08MC018_Daily_Flow_ts.csv
+08MF005				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08MF005_Daily_Flow_ts.csv
+08MF040				D:/Fraser/Streamflow/station_records/updated_records/streamflow/08MF040_Daily_Flow_ts.csv
