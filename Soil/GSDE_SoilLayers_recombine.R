@@ -21,7 +21,8 @@
 #
 # Created Date: 05/21/2021
 #
-# Last Modified: 05/25/2021
+# Last Modified: 05/30/2021
+#               1) Placing the SoilDB_Domain's code here
 #                           
 # Copyright (C) 2021 Ala Bahrami  
 #
@@ -32,19 +33,47 @@ library(rgdal)
 library(raster)
 library(shapefiles)
 library(progress)
-
+source("Extract_GSDE.R")
+source("maskgenerate.R")
 # Setting inputs -------------
+nrow    <- 64 +2
+ncol    <- 81 +2 
+res     <- 0.125
+xmin    <- -128.125 - 1*res
+ymin    <- 48.5 - 1*res
+texture <- TRUE
 indir  <- "D:/Data/SoilData/"
+varlist <- c("CLAY","SAND","OC", "SDEP")
 
 #GSDE Soil Layer depths
 depth    <- c(0.045, 0.046, 0.075, 0.123, 0.204, 0.336, 0.554, 0.913) 
 
-### construct 4 MESH-CLAY/SAND/OC layers for domain of interest -----
-# note : In the original datasets, the open waters and lakes are marked as NA.
-# replacing these values with the domain mean value does not make sense. The replacing 
-# with mean values should be done after aggregation to the MESH model resolution. 
+### Extracting Clay layers --------
+var    <-  varlist[1]
+Extract_GSDE(nrow , ncol , res ,
+             xmin , ymin , 
+             indir, var, texture)
 
-varlist <- c("CLAY","SAND","OC")
+### Extracting SAND layers --------
+var   <-  varlist[2]
+Extract_GSDE(nrow , ncol , res ,
+             xmin , ymin , 
+             indir, var, texture)
+
+### Extracting Organic layers --------
+var   <-  varlist[3]
+Extract_GSDE(nrow , ncol , res ,
+             xmin , ymin , 
+             indir, var, texture)
+
+### Extracting and construct MESH-SDEP layer --------
+texture <- FALSE
+var     <-  varlist[4]
+Extract_GSDE(nrow , ncol , res ,
+             xmin , ymin , 
+             indir, var, texture)
+
+### construct 4 MESH-CLAY/SAND/OC layers for domain of interest -----
 pb <- progress_bar$new(
       format = "  Constructing MESH Soil layers [:bar] :percent eta: :eta",
       total = 3, clear = FALSE, width= 70)
@@ -163,44 +192,3 @@ for (j in 1:3) {
   }
   
 }
-
-### Check if organic matter is larger than 30% --------------
-clay_MESH_ed.array         <- array(1 : nr*nc*4, dim = c(nr, nc, 4))
-sand_MESH_ed.array         <- array(1 : nr*nc*4, dim = c(nr, nc, 4))
-organic_MESH_ed.array      <- array(1 : nr*nc*4, dim = c(nr, nc, 4))
-
-# this section is based on Mohamed's code. I am not sure if it is correct
-for (i in 1:4){
-  
-    fid     <- (organic_MESH.array[ , , i] >= 30)
-    # clay 
-    a1      <- clay_MESH.array[ , , i]
-    a1[fid] <- 0
-    clay_MESH_ed.array[ , , i] <- a1
-    
-    # sand 
-    a2      <- sand_MESH.array[ , , i]
-    a2[fid] <- -2
-    sand_MESH_ed.array[ , , i] <- a2
-    
-    # organic 
-    a3      <- organic_MESH.array[ , , i]
-    
-    if (i ==1){
-      a3[fid] <- 1  
-    }
-    else if (i ==2){
-      a3[fid] <- 2
-    }
-    else {
-      a3[fid] <- 3
-    }
-    organic_MESH_ed.array[ , , i] <- a3
-  
-}
-
-
-
-
-
-
