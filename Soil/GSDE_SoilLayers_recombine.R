@@ -25,15 +25,12 @@
 #
 #             http://globalchange.bnu.edu.cn/research/dtb.jsp
 #
-# See also: Extract_GSDE, SoilDB_domain, soil_texture_GSDE.m
+# See also: 
 #
 # Author: Ala Bahrami       
 #
 # Created Date: 05/21/2021
-#
-# Last Modified: 05/30/2021
-#               1) Placing the SoilDB_Domain's code here
-#                           
+#                          
 # Copyright (C) 2021 Ala Bahrami  
 #
 # loading libs ------------------------------

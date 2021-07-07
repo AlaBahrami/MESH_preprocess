@@ -29,18 +29,8 @@ Extract_GSDE <- function(nrow, ncol, res, xmin, ymin, indir, var, texture) {
   # Author: Ala Bahrami       
   #
   # Created Date: 03/09/2021
-  #
-  # Last Modified: 05/10/2021
-  #                         1) Change the structure of code to a function and make compatible
-  #                         to read GSDE soil dataset based on variable 
-  #                         2) Calling create_mask as a function    
-  #                05/28/2021 
-  #                         1) Read the SDEP data 
+  # 
   # Copyright (C) 2021 Ala Bahrami  
-  #
-  # Note: The resolution of mask should be same as the input GSDE dataset, otherwise
-  # it create incorrect croping and changed the extent and resolution of datasets. 
-  # Todo: resample mask to GSDE resolution. 
   #
   ### loading libs ------------------------------
   library(ncdf4)
