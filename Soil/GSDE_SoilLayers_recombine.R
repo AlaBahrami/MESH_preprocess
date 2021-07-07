@@ -2,7 +2,7 @@
 #
 #  The purpose of this script is to read extracted soil layers (e.g., CLAY, SAND, Organic) 
 #  of the domain of interest. Then, based on GSDE soil layer depths, 4 or 3 soil layers 
-#  required for running MESH model are generated. These layers thereafter should be resampled
+#  required for running MESH model are generated. These layers thereafter can be resampled
 #  to MESH grid resolution which can be used for generating MESH parameters.  
 #
 # Input         
@@ -13,7 +13,17 @@
 #
 #
 # Reference     
+#             Shangguan, W., Dai, Y., Duan, Q., Liu, B., Yuan, H., 2014. A global soil data set for 
+#             earth system modeling. J. Adv. Model. Earth Syst. 6, 249–263.
+#             https://doi.org/10.1002/2013MS000293
 #
+#             http://globalchange.bnu.edu.cn/research/soilw
+#
+#             Shangguan, W., Hengl, T., Mendes de Jesus, J., Yuan, H., Dai, Y., 2017. Mapping the global 
+#             depth to bedrock for land surface modeling. J. Adv. Model. Earth Syst. 9, 65–88.
+#             https://doi.org/10.1002/2016MS000686
+#
+#             http://globalchange.bnu.edu.cn/research/dtb.jsp
 #
 # See also: Extract_GSDE, SoilDB_domain, soil_texture_GSDE.m
 #
@@ -102,7 +112,7 @@ for (j in 1:3) {
           gsde.array <- array(1 : nr*nc*8, dim = c(nr, nc, 8))
         }
         
-        # subsitude NA values with the mean value for gsde 
+        # subsitude NA values with the mean value for gsde if required 
         cl1                 <- values(ly1)
         #cl1_mean            <- mean(cl1, na.rm=TRUE)
         #cl1[is.na(cl1)]     <- cl1_mean

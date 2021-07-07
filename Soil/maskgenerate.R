@@ -18,6 +18,7 @@ create_mask <- function(nrow, ncol, res, xmin, ymin) {
     dim(mask)      <-c(nrow , ncol)
     crs(mask)      <-CRS("+proj=longlat +ellps=GRS80 +datum=NAD83
                          +no_defs+ towgs84=0,0,0")
+    
     # display
     plot(mask)
     
