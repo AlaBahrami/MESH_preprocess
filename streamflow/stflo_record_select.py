@@ -22,52 +22,107 @@ PROGRAMMER(S)
     Ala Bahrami
 REVISION HISTORY
     20210517 -- Initial version created and posted online
+    20210727 -- 1) modifying code for the period of 1951 to 2017
+                and add the condition when start and finish time 
+                of data do not match the time period of selection
+                2) reading all streamflow gauges  
 REFERENCES
+
+todo 1) : calibrated and non-calibrated list
+todo 2) : add header with geographical location of stations 
+        then adhere the records 
 
 """
 #%% importing module 
 import pandas as pd
 import numpy as np 
+import os 
+import glob
 
 #%% setting I/O dirs 
-prmname = 'prm/st_records.txt'
+# get all streamflow files 
+path     = 'D:/fraser/streamflow/station_records/updated_records/streamflow'  
+dir_list = os.listdir(path)
+print(dir_list)
 
-# output 
-statfill    = 'output/stflo_FRB_calib.csv'
-statfill85  = 'output/stflo_FRB_calib_85.csv'
-index85     = 'output/stflo_FRB_calib_85_index.csv'
+# csv files in the path
+files = glob.glob(path + "/*.csv")
+
+# output all records 
+statfill    = 'output/1951_2017/stflo_FRB.csv'
+statfill85  = 'output/1951_2017/stflo_FRB_85.csv'
+index85     = 'output/1951_2017/stflo_FRB_85_index.csv'
 
 #%% time range (selection period)
-time = pd.date_range(start='1/1/1979', end='31/12/2017', freq='D')
+time = pd.date_range(start='1/1/1951', end='31/12/2017', freq='D')
 m = len(time)
 
-# %% reading directory of streamflow records 
-fid  = open(prmname,'r')    
+# %% reading directory of streamflow records for calibrated stations 
+# calibrated files 
+# prmname = 'prm/st_records.txt'
 
-Info = np.loadtxt(fid,
-            dtype={'names': ('col1', 'col2'),
-            'formats': ('U10', 'U200')})
+# output calibration 
+# statfill    = 'output/1951_2017/stflo_FRB_calib.csv'
+# statfill85  = 'output/1951_2017/stflo_FRB_calib_85.csv'
+# index85     = 'output/1951_2017/stflo_FRB_calib_85_index.csv'
 
-fid.close()
+# reading from a selected list 
+# fid  = open(prmname,'r')    
+
+# Info = np.loadtxt(fid,
+#             dtype={'names': ('col1', 'col2'),
+#             'formats': ('U10', 'U200')})
+
+# fid.close()
 
 #%% reading input streamflow records
-n = len(Info)
+# n = len(Info)
+n = len(files)
+
 sf = np.zeros((m,n))
 ids = []
 
 for i in range(n):
-    data  = pd.read_csv(Info[i][1])
-    rs = np.where(data['Date'].values == '1979/01/01')[0]
-    rf = np.where(data['Date'].values == '2017/12/31')[0]    
-    if ((rf-rs + 1) == m):
+    #data  = pd.read_csv(Info[i][1])
+    data  = pd.read_csv(files[i])
+    rs = np.where(data['Date'].values == time[0].strftime('%Y/%m/%d'))[0]
+    rf = np.where(data['Date'].values == time[m-1].strftime('%Y/%m/%d'))[0]    
+
+    if (data['Date'].values[len(data)-3] < time[0].strftime('%Y/%m/%d')):
+
+            sf[:, i] = np.nan
             ids = np.append(ids, data[' ID'].values[0])
-            sf[:, i] = data.values[rs[0]: rf[0]+1, 3] 
-    else: 
-            print("Error: The Input %s have %d missing records" % (data[' ID'].values[0], m-(rf-rs)))
-
+            print("Warning: The Records of Gauge %s does not observations in \
+                  the time window of interest" % (data[' ID'].values[0]))
+    else:
+        
+        # check different conditions when the indices of start and finish are not found  
+        if ((rs.size == 0) & (rf.size == 0)):
+            rs2 = np.where(data['Date'].values[0] == time.strftime('%Y/%m/%d'))[0]
+            rf2 = np.where(data['Date'].values[len(data)-3] == time.strftime('%Y/%m/%d'))[0]
+            sf[0 : rs2[0] , i] = np.nan
+            sf[rs2[0] : rf2[0]+1, i] = data.values[0: len(data)-2 , 3]
+            sf[rf2[0] + 1 : m , i]    =  np.nan
+            ids = np.append(ids, data[' ID'].values[0])
+            
+        elif (rs.size == 0):
+            rs2 = np.where(data['Date'].values[0] == time.strftime('%Y/%m/%d'))[0]
+            sf[0 : rs2[0] , i] = np.nan    
+            sf[rs2[0] : rs2[0] + rf[0] + 1 , i] = data.values[0: rf[0] + 1 , 3]
+            ids = np.append(ids, data[' ID'].values[0])
+            
+        elif (rf.size == 0):
+            rf2 = np.where(data['Date'].values[len(data)-3] == time.strftime('%Y/%m/%d'))[0]
+            sf[0 : rf2[0] + 1 , i]     = data.values[rs[0]: rs[0] + rf2[0] + 1, 3]
+            sf[rf2[0] + 1 : m , i]     = np.nan
+            ids = np.append(ids, data[' ID'].values[0])
+        else : 
+           sf[:, i] = data.values[rs[0]: rf[0]+1, 3]
+           ids = np.append(ids, data[' ID'].values[0])
+       
 stflo = pd.DataFrame(time, columns = ['Time'])
-stflo[ids] = sf
-
+stflo[ids] = sf    
+           
 #%% finding missing values with FillValue
 
 fid = stflo.isnull()
