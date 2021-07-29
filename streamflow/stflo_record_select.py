@@ -45,8 +45,9 @@ path     = 'D:/fraser/streamflow/station_records/updated_records/streamflow'
 dir_list = os.listdir(path)
 print(dir_list)
 
-# csv files in the path
+# streamflow files and IDs
 files = glob.glob(path + "/*.csv")
+file_id = glob.glob(path + "/*ID.xlsx")
 
 # output all records 
 statfill    = 'output/1951_2017/stflo_FRB.csv'
@@ -122,23 +123,28 @@ for i in range(n):
        
 stflo = pd.DataFrame(time, columns = ['Time'])
 stflo[ids] = sf    
+
+#%% reorder streamflow records based on user defined ID
+stid  = pd.read_excel(file_id[0])
+stflo_reorder = pd.DataFrame(time, columns = ['Time'])
+stflo_reorder[stid['Station_ID']] = stflo[stid['Station_ID']]
            
 #%% finding missing values with FillValue
 
-fid = stflo.isnull()
-count_nan = len(stflo) - stflo.count()
+fid = stflo_reorder.isnull()
+count_nan = len(stflo_reorder) - stflo_reorder.count()
 
 # replacing nan values with -1 
-stflo = stflo.fillna(value = -1) 
+stflo_reorder = stflo_reorder.fillna(value = -1) 
 
 #%% finding missing values and fill them with FillValue 
 statfull   =  count_nan[count_nan == 0]
 stat_85    =  count_nan[count_nan <= 0.15*(m)]
 
 # extract station indices with more 85% full records 
-stflo_85   = stflo[stat_85.index] 
+stflo_reorder_85   = stflo_reorder[stat_85.index] 
 
 #%% write outputs 
-stflo.to_csv(statfill, index = False, float_format='%.1f')
-stflo_85.to_csv(statfill85, index = False, float_format='%.1f')
+stflo_reorder.to_csv(statfill, index = False, float_format='%.1f')
+stflo_reorder_85.to_csv(statfill85, index = False, float_format='%.1f')
 stat_85.to_csv(index85)
