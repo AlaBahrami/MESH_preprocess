@@ -9,6 +9,9 @@
 # Last Modified: 08/10/2021
 #                 modified the organic header to orgm to be consistent with MESH  
 # note 1) The TauDEM section is commented as the outputs can be read
+#
+#               11/12/2021
+#               changing slope to tangent instead of degree 
 # This part can be replaced in a separate section as a function to produce these output variables.  
 # Note 2) all hard coded section can be replaced with input params.  
 ### laoding libs ------------------------------
@@ -25,9 +28,14 @@ library(ncdf4)
 library(geosphere)
 
 ### set user input directory ---------------------------
-setwd("D:/programing/R/MESH_Preprocess/frb_project/Input")
-ncpath <- "D:/programing/R/MESH_Preprocess/frb_project/Input"
-outdir <- "D:/programing/R/MESH_Preprocess/frb_project/output/Fraser_GEM_0p125_MinThresh_"
+#setwd("D:/programing/R/MESH_Preprocess/frb_project/Input")
+#ncpath <- "D:/programing/R/MESH_Preprocess/frb_project/Input"
+#outdir <- "D:/programing/R/MESH_Preprocess/frb_project/output/Fraser_GEM_0p125_MinThresh_"
+
+setwd("C:/Users/alb129/OneDrive - University of Saskatchewan/programing/R/MESH_Preprocess/frb_project/Input")
+ncpath <- "C:/Users/alb129/OneDrive - University of Saskatchewan/programing/R/MESH_Preprocess/frb_project/Input"
+outdir <- "C:/Users/alb129/OneDrive - University of Saskatchewan/programing/R/MESH_Preprocess/frb_project/output/Fraser_GEM_0p125_MinThresh_"
+
 ### select version of the MESH ---------------------------
 #MESHVersion <- "Mountain"
 MESHVersion <- "Original"
@@ -192,7 +200,8 @@ drain_net = raster("domain_demsrc.tif")
 #basin_dem <- mask(filldem1, facc_at_outlet1)
 
 ### Calculate Slope and aspect ------------------------------
-slope <- terrain(crop(domain_dem, nwp_zone), opt = "slope", unit='degrees', neighbors=8)
+#slope <- terrain(crop(domain_dem, nwp_zone), opt = "slope", unit='degrees', neighbors=8)
+slope <- terrain(crop(domain_dem, nwp_zone), opt = "slope", unit='tangent', neighbors=8)
 aspect <- terrain(crop(domain_dem, nwp_zone), opt = "aspect", unit='degrees', neighbors=8, flatAspect = NA)
 #
 
