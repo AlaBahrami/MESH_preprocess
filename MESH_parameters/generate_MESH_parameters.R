@@ -12,6 +12,10 @@
 #
 #               11/12/2021
 #               changing slope to tangent instead of degree 
+#
+#               11/16/2021
+#               changed the threshold from 100 to see the impact on the calculation of DDEN
+#
 # This part can be replaced in a separate section as a function to produce these output variables.  
 # Note 2) all hard coded section can be replaced with input params.  
 ### laoding libs ------------------------------
@@ -39,7 +43,7 @@ outdir <- "C:/Users/alb129/OneDrive - University of Saskatchewan/programing/R/ME
 ### select version of the MESH ---------------------------
 #MESHVersion <- "Mountain"
 MESHVersion <- "Original"
-MinThresh   <- 100 
+MinThresh   <- 10 # 100,20 default value 
 NSL         <- 5
 
 ### Name of the drainage basin of study ------------------------------
@@ -125,32 +129,33 @@ ResFactor1  <- round(ResFactor1[1])
 ResFactor2  <- res(nwp_grid)/res(domain_SDEP)
 ResFactor2  <- round(ResFactor2[1])
 
+# commented until line 193 to avoid applying these analyses each time 
 ### Creating the basin outlet using the lat and long data --------------------------
 #! this section is hard coded. The location of outlet should be determined by user
 # the gauge location is used in the DEM post-processing and it is commented here. 
-# streamgauge              <- data.frame(lat = outlet_lat, long = outlet_lon)
-# coordinates(streamgauge) <- ~long+lat
-# crs(streamgauge)         <- crs(domain_dem)
-# raster::shapefile(streamgauge, "approxoutlets.shp", overwrite=TRUE)
+streamgauge              <- data.frame(lat = outlet_lat, long = outlet_lon)
+coordinates(streamgauge) <- ~long+lat
+crs(streamgauge)         <- crs(domain_dem)
+raster::shapefile(streamgauge, "approxoutlets.shp", overwrite=TRUE)
 
 ### TauDEM approach (DEM post-processing and Watershed Delineation -------------------------
 # Pitremove
-# system("mpiexec -n 12 pitremove -z Merit_DEM_2019_clip.tif -fel domain_demfel.tif")
+ system("mpiexec -n 12 pitremove -z Merit_DEM_2019_clip.tif -fel domain_demfel.tif")
 
 #! D8 flow directions and slope
-# system("mpiexec -n 12 D8Flowdir -p domain_demp.tif -sd8 domain_demsd8.tif -fel domain_demfel.tif",show.output.on.console=F,invisible=F)
+ system("mpiexec -n 12 D8Flowdir -p domain_demp.tif -sd8 domain_demsd8.tif -fel domain_demfel.tif",show.output.on.console=F,invisible=F)
 
 # Contributing area (DA)
-# system("mpiexec -n 12 AreaD8 -p domain_demp.tif -ad8 domain_demad8.tif -nc")
+ system("mpiexec -n 12 AreaD8 -p domain_demp.tif -ad8 domain_demad8.tif -nc")
 
 # Grid Network gord (Strahler Network Order), plen (longest upslope length grid), tlen (total upslope length grid)
-# system("mpiexec -n 12 Gridnet -p domain_demp.tif -gord domain_demgord.tif -plen domain_demplen.tif -tlen domain_demtlen.tif")
+ system("mpiexec -n 12 Gridnet -p domain_demp.tif -gord domain_demgord.tif -plen domain_demplen.tif -tlen domain_demtlen.tif")
 
-# Threshold
-# system("mpiexec -n 12 Threshold -ssa domain_demad8.tif -src domain_demsrc.tif -thresh 100")
+# Threshold (changed the threshold to 20)
+ system("mpiexec -n 12 Threshold -ssa domain_demad8.tif -src domain_demsrc.tif -thresh 10")
 
 # Move Outlets to fall in the flow acculation pixcel
-# system("mpiexec -n 12 moveoutletstostreams -p domain_demp.tif -src domain_demsrc.tif -o approxoutlets.shp -om outlet.shp")
+ system("mpiexec -n 12 moveoutletstostreams -p domain_demp.tif -src domain_demsrc.tif -o approxoutlets.shp -om outlet.shp")
 #
 
 # Contributing area upstream of outlet
@@ -158,21 +163,21 @@ ResFactor2  <- round(ResFactor2[1])
 #! Once the outlet has been placed exactly on the stream paths, the D8 Contributing Area function is run again
 #! , but specifying an outlet shapefile to evaluate contributing area and effectively identify the watershed 
 #! upstream of the outlet point (or points for multiple outlets).
-# system("mpiexec -n 12 Aread8 -p domain_demp.tif -o outlet.shp -ad8 domain_demssa.tif")
+ system("mpiexec -n 12 Aread8 -p domain_demp.tif -o outlet.shp -ad8 domain_demssa.tif")
 
 # Threshold
 # ! classify the domain_demssa into two classes 0 less than 100, then 1 more than 100
-# system("mpiexec -n 12 Threshold -ssa domain_demssa.tif -src domain_demsrc.tif -thresh 100")
+ system("mpiexec -n 12 Threshold -ssa domain_demssa.tif -src domain_demsrc.tif -thresh 10")
 
 # # Drop Analysis
-#system("mpiexec -n 8 Dropanalysis -p domain_demp.tif -fel domain_demfel.tif -ad8 domain_demad8.tif -ssa domain_demssa.tif -drp logandrp.txt -o outlet.shp -par 5 500 10 0")
+##system("mpiexec -n 8 Dropanalysis -p domain_demp.tif -fel domain_demfel.tif -ad8 domain_demad8.tif -ssa domain_demssa.tif -drp logandrp.txt -o outlet.shp -par 5 500 10 0")
 
 # Stream Reach and Watershed
 #! This network is still only represented as a grid. To convert this into vector elements represented using a shapefile, 
 #! the Stream Reach and Watershed function is used.
 #! outputs : domain_demord.tif (Stream Order grid), Connectivity grid (domain_demtree.txt), Netwrok Coordinates (domain_demcoord.txt) 
 #! Reach shape file (domain_demnet.shp), watershed grid (domain_demw.tif)
-# system("mpiexec -n 12 Streamnet -fel domain_demfel.tif -p domain_demp.tif -ad8 domain_demad8.tif -src domain_demsrc.tif -o outlet.shp -ord domain_demord.tif -tree domain_demtree.txt -coord domain_demcoord.txt -net domain_demnet.shp -w domain_demw.tif")
+ system("mpiexec -n 12 Streamnet -fel domain_demfel.tif -p domain_demp.tif -ad8 domain_demad8.tif -src domain_demsrc.tif -o outlet.shp -ord domain_demord.tif -tree domain_demtree.txt -coord domain_demcoord.txt -net domain_demnet.shp -w domain_demw.tif")
 
 ### Collecting the drainage files generated from previous steps ------------------------------
 # and croping to domain area   
@@ -184,6 +189,8 @@ ResFactor2  <- round(ResFactor2[1])
 # flow direction 
 #fdir0 = raster("domain_demp.tif")
 #fdir1 <- crop(fdir0, nwp_zone)
+
+# commented until here 
 
 # Contributing area upstream of outlet
 facc_at_outlet0 = raster("domain_demssa.tif")
