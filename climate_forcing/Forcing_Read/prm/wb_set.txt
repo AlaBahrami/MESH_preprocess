@@ -1,0 +1,12 @@
+wb6_wgc 		input/Basin_average_water_balance_Gauge6_wgc.csv
+wb6_wfdei 		input/Basin_average_water_balance_Gauge6_WFDEI.csv
+wb6_rdrs		input/Basin_average_water_balance_Gauge6_RDRS.csv
+wb6_gc			input/Basin_average_water_balance_Gauge6_GC.csv
+wb_wgc 			input/Basin_average_water_balance_wgc.csv
+wb_wfdei 		input/Basin_average_water_balance_WFDEI.csv
+wb_rdrs			input/Basin_average_water_balance_RDRS.csv
+wb_gc			input/Basin_average_water_balance_GC.csv
+eb_wgc 			input/Basin_average_energy_balance_wgc.csv
+eb_wfdei 		input/Basin_average_energy_balance_WFDEI.csv
+eb_rdrs			input/Basin_average_energy_balance_RDRS.csv
+eb_gc			input/Basin_average_energy_balance_GC.csv
