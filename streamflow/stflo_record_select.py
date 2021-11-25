@@ -4,7 +4,7 @@ NAME
     stflo_record_selection 
 PURPOSE
     The purpose of this script is to extract streamflow station records based 
-    on a desired time period of study (e.g., 1979 to 2017). The missing records 
+    on a desired time period of study (e.g., 1951 to 2017). The missing records 
     of stations are filled out. The indices and records of stations with less than
     15% of missing records are exported. 
 
@@ -41,12 +41,12 @@ import glob
 
 #%% setting I/O dirs 
 # get all streamflow files 
-path     = 'D:/fraser/streamflow/station_records/updated_records/streamflow'  
+path     = 'station_records/updated_records/streamflow'  
 dir_list = os.listdir(path)
 print(dir_list)
 
 # streamflow files and IDs
-files = glob.glob(path + "/*.csv")
+files   = glob.glob(path + "/*.csv")
 file_id = glob.glob(path + "/*ID.xlsx")
 
 # output all records 
